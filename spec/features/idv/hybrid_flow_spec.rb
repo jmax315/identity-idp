@@ -47,8 +47,9 @@ describe 'Hybrid Flow' do
       expect(page).to have_content(t('doc_auth.headings.verify'))
       click_idv_continue
 
-      fill_out_phone_form_mfa_phone(user)
+      fill_out_phone_form_ok
       click_idv_continue
+      verify_phone_otp
 
       fill_in t('idv.form.password'), with: Features::SessionHelper::VALID_PASSWORD
       click_idv_continue
