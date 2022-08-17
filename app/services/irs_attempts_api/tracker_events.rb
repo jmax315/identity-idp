@@ -11,6 +11,35 @@ module IrsAttemptsApi
       )
     end
 
+    # TODO: Add description
+    def forgot_password_email_confirmed(email:, success:)
+      track_event(
+        :forgot_password_email_confirmed,
+        email: email,
+        success: success,
+      )
+    end
+
+    # TODO: Add description
+    def forgot_password_new_password_submitted(email:, success:, failure_reason: nil)
+      track_event(
+        :forgot_password_new_password_submitted,
+        email: email,
+        success: success,
+        failure_reason: failure_reason,
+      )
+    end
+
+    # TODO: Add description
+    def forgot_password_email_sent(email:, success:, failure_reason: nil)
+      track_event(
+        :forgot_password_email_sent,
+        email: email,
+        success: success,
+        failure_reason: failure_reason,
+      )
+    end
+
     # @param [Boolean] success True if the email and password matched
     # A user has initiated a logout event
     def logout_initiated(success:)

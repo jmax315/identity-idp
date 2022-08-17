@@ -21,6 +21,12 @@ module Users
     def edit
       result = PasswordResetTokenValidator.new(token_user).submit
 
+      # TODO: Fill in email address, event
+      # irs_attempts_api_tracker.forgot_password_email_confirmed(
+      #   email: '!!!'
+      #   success: result.success?,
+      #   failure_reason: result.first_error_message
+      # )
       analytics.password_reset_token(**result.to_h)
 
       if result.success?
@@ -38,6 +44,12 @@ module Users
 
       result = @reset_password_form.submit(user_params)
 
+      # TODO: Fill in email address, event
+      # irs_attempts_api_tracker.forgot_password_new_password_submitted(
+      #   email: '!!!',
+      #   success: result.success?,
+      #   failure_reason: result.first_error_message
+      # )
       analytics.password_reset_password(**result.to_h)
 
       if result.success?
