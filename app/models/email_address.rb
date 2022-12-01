@@ -1,4 +1,6 @@
 class EmailAddress < ApplicationRecord
+  self.ignored_columns = %w[last_sign_in_at]
+
   include EncryptableAttribute
 
   encrypted_attribute_without_setter(name: :email)
