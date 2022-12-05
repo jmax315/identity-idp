@@ -64,7 +64,7 @@ class EmailAddress < ApplicationRecord
       # rubocop:enable Rails/SkipsModelValidations
     end
 
-    private
+    # private
 
     def create_fingerprints(email)
       [Pii::Fingerprinter.fingerprint(email), *Pii::Fingerprinter.previous_fingerprints(email)]

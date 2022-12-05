@@ -1,9 +1,9 @@
 class AccountShowPresenter
   attr_reader :decorated_user, :decrypted_pii, :personal_key, :locked_for_session, :pii,
-              :sp_session_request_url, :sp_name
+              :sp_session_request_url, :sp_name, :email_id
 
   def initialize(decrypted_pii:, personal_key:, sp_session_request_url:, sp_name:, decorated_user:,
-                 locked_for_session:)
+                 locked_for_session:, email_id:)
     @decrypted_pii = decrypted_pii
     @personal_key = personal_key
     @decorated_user = decorated_user
@@ -11,6 +11,7 @@ class AccountShowPresenter
     @sp_session_request_url = sp_session_request_url
     @locked_for_session = locked_for_session
     @pii = determine_pii
+    @email_id = email_id
   end
 
   def show_personal_key_partial?
@@ -69,7 +70,8 @@ class AccountShowPresenter
   def header_personalization
     return decrypted_pii.first_name if decrypted_pii.present?
 
-    EmailContext.new(decorated_user.user).last_sign_in_email_address.email
+    binding.pry
+    EmailContext.new(decorated_user.user, email_id).last_sign_in_email_address_session
   end
 
   def totp_content

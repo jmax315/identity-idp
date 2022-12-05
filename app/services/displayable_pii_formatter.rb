@@ -4,12 +4,12 @@ class DisplayablePiiFormatter
     :social_security_number, :address, :birthdate, :phone, keyword_init: true
   )
 
-  attr_reader :current_user
-  attr_reader :pii
+  attr_reader :current_user, :pii, :email_id
 
-  def initialize(current_user:, pii:)
+  def initialize(current_user:, pii:, email_id:)
     @current_user = current_user
     @pii = pii
+    @email_id = email_id
   end
 
   # @return [FormattedPii]
@@ -34,7 +34,8 @@ class DisplayablePiiFormatter
   private
 
   def email
-    EmailContext.new(current_user).last_sign_in_email_address.email
+    # EmailContext.new(current_user).last_sign_in_email_address.email
+    EmailContext.new(current_user, email_id).last_sign_in_email_address_session
   end
 
   def all_emails

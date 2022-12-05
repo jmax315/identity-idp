@@ -1,5 +1,5 @@
 class CompletionsPresenter
-  attr_reader :current_user, :current_sp, :decrypted_pii, :requested_attributes, :completion_context
+  attr_reader :current_user, :current_sp, :decrypted_pii, :requested_attributes, :completion_context, :email_id
 
   SORTED_IAL2_ATTRIBUTE_MAPPING = [
     [%i[given_name family_name], :full_name],
@@ -28,7 +28,8 @@ class CompletionsPresenter
     decrypted_pii:,
     requested_attributes:,
     ial2_requested:,
-    completion_context:
+    completion_context:,
+    email_id:
   )
     @current_user = current_user
     @current_sp = current_sp
@@ -36,6 +37,7 @@ class CompletionsPresenter
     @requested_attributes = requested_attributes
     @ial2_requested = ial2_requested
     @completion_context = completion_context
+    @email_id = email_id
   end
 
   def ial2_requested?
@@ -114,6 +116,7 @@ class CompletionsPresenter
     @displayable_pii ||= DisplayablePiiFormatter.new(
       current_user: current_user,
       pii: decrypted_pii,
+      email_id: email_id
     ).format
   end
 

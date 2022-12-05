@@ -6,6 +6,7 @@ class EventsController < ApplicationController
   EVENTS_PAGE_SIZE = 25
 
   def show
+    binding.pry
     analytics.events_visit
     @presenter = AccountShowPresenter.new(
       decrypted_pii: nil,
@@ -14,6 +15,7 @@ class EventsController < ApplicationController
       sp_name: decorated_session.sp_name,
       decorated_user: current_user.decorate,
       locked_for_session: pii_locked_for_session?(current_user),
+      email_id: session[:email_id]
     )
     device_and_events
   rescue ActiveRecord::RecordNotFound, ActiveModel::RangeError

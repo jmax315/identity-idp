@@ -47,6 +47,7 @@ module SignUp
         requested_attributes: decorated_session.requested_attributes.map(&:to_sym),
         ial2_requested: sp_session[:ial2] || sp_session[:ialmax],
         completion_context: needs_completion_screen_reason,
+        email_id: session[:email_id]
       )
     end
 

@@ -6,6 +6,7 @@ module Accounts
     layout 'account_side_nav'
 
     def show
+      binding.pry
       @presenter = AccountShowPresenter.new(
         decrypted_pii: nil,
         personal_key: flash[:personal_key],
@@ -13,6 +14,7 @@ module Accounts
         sp_name: decorated_session.sp_name,
         decorated_user: current_user.decorate,
         locked_for_session: pii_locked_for_session?(current_user),
+        email_id: session[:email_id]
       )
     end
   end

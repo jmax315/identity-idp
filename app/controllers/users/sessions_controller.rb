@@ -136,12 +136,28 @@ module Users
       sign_in(resource_name, resource)
       cache_active_profile(auth_params[:password])
       create_user_event(:sign_in_before_2fa)
+      binding.pry
+      # !!! Including both email updates for now
       EmailAddress.update_last_sign_in_at_on_user_id_and_email(
         user_id: current_user.id,
         email: auth_params[:email],
       )
+      update_last_sign_in_at_email_session(current_user.id, auth_params[:email])
       redirect_to next_url_after_valid_authentication
     end
+
+    # !!!
+    def update_last_sign_in_at_email_session(user_id, email)
+      return nil if email.to_s.empty?
+
+      email = email.downcase.strip
+      email_fingerprints = EmailAddress.create_fingerprints(email)
+
+      # !!!
+      email_id = EmailAddress.find_by(user_id: user_id, email_fingerprint: email_fingerprints)&.pluck(:id)
+      session[:email_id] = email_id if email_id
+    end
+
 
     def now
       @now ||= Time.zone.now

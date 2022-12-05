@@ -35,6 +35,7 @@ class OpenidConnectUserInfoPresenter
     AgencyIdentityLinker.new(identity).link_identity.uuid
   end
 
+  # TODO: Modify the following reference
   def email_from_sp_identity
     email_context.last_sign_in_email_address.email
   end

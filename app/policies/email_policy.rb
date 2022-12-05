@@ -1,5 +1,7 @@
 class EmailPolicy
   def initialize(user)
+    # !!! Review following
+    binding.pry
     @user = EmailContext.new(user)
   end
 

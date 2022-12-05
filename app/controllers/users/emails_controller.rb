@@ -101,6 +101,8 @@ module Users
     end
 
     def check_max_emails_per_account
+      # !!! Review usage
+      binding.pry
       return if EmailPolicy.new(current_user).can_add_email?
       flash[:email_error] = t('email_addresses.add.limit')
       redirect_to account_url(anchor: 'emails')
