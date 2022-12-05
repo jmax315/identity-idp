@@ -13,7 +13,7 @@ class EmailContext
 
   # The following is a proof of concept placeholder function
   def last_sign_in_email_address_session
-    email_address.email
+    email_address&.email || EmailAddress.confirmed.where(user_id: user_id).order_by(id: email_id).first
   end
 
   def email_address

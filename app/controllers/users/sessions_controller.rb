@@ -154,6 +154,7 @@ module Users
       email_fingerprints = EmailAddress.create_fingerprints(email)
 
       # !!!
+      binding.pry
       email_id = EmailAddress.find_by(user_id: user_id, email_fingerprint: email_fingerprints)&.pluck(:id)
       session[:email_id] = email_id if email_id
     end
