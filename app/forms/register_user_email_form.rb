@@ -90,8 +90,12 @@ class RegisterUserEmailForm
     else
       user.accepted_terms_at = Time.zone.now
       user.save!
+
+      # TODO: Note request_id is blank here
+
       SendSignUpEmailConfirmation.new(user).call(
         request_id: email_request_id(request_id),
+        user_ip: @analytics.request_attributes[:user_ip],
         instructions: instructions,
         password_reset_requested: password_reset_requested?,
       )
