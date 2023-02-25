@@ -48,13 +48,14 @@ class UserMailer < ActionMailer::Base
     message.instance_variable_set(:@_metadata, { user: user, action: action_name })
   end
 
-  def email_confirmation_instructions(token, request_id:, user_ip:, instructions:)
+  def email_confirmation_instructions(token, request_id:, user_ip:, user_location:, instructions:)
     with_user_locale(user) do
       presenter = ConfirmationEmailPresenter.new(user, view_context)
       @first_sentence = instructions || presenter.first_sentence
       @confirmation_period = presenter.confirmation_period
       @request_id = request_id
       @user_ip = user_ip
+      @user_location = user_location
       @locale = locale_url_param
       @token = token
       mail(

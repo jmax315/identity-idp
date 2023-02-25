@@ -7,13 +7,14 @@ class SendSignUpEmailConfirmation
     @user = user
   end
 
-  def call(request_id: nil, user_ip: nil, instructions: nil, password_reset_requested: false)
+  def call(request_id: nil, user_ip: nil, user_location: nil, instructions: nil,
+           password_reset_requested: false)
     update_email_address_record
 
     if password_reset_requested && !user.confirmed?
       send_pw_reset_request_unconfirmed_user_email(request_id, instructions)
     else
-      send_confirmation_email(request_id, user_ip, instructions)
+      send_confirmation_email(request_id, user_ip, user_location, instructions)
     end
   end
 
@@ -51,11 +52,12 @@ class SendSignUpEmailConfirmation
     )
   end
 
-  def send_confirmation_email(request_id, user_ip, instructions)
+  def send_confirmation_email(request_id, user_ip, user_location, instructions)
     UserMailer.with(user: user, email_address: email_address).email_confirmation_instructions(
       confirmation_token,
       request_id: request_id,
       user_ip: user_ip,
+      user_location: user_location,
       instructions: instructions,
     ).deliver_now_or_later
   end

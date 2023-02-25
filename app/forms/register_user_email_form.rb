@@ -80,6 +80,11 @@ class RegisterUserEmailForm
     true
   end
 
+  # TODO: Note, at this point there is no user event from which to grab
+  # user location or device info from. That is, no prior event has been created:
+  # user.events => empty
+  # UserDecorator.new(user).recent_events => nil
+  # UserDecorator.new(user).recent_devices => nil
   def process_successful_submission(request_id, instructions)
     # To prevent discovery of existing emails, we check to see if the email is
     # already taken and if so, we act as if the user registration was successful.
@@ -95,11 +100,22 @@ class RegisterUserEmailForm
 
       SendSignUpEmailConfirmation.new(user).call(
         request_id: email_request_id(request_id),
-        user_ip: @analytics.request_attributes[:user_ip],
+        user_ip: user_ip,
+        user_location: user_location,
         instructions: instructions,
         password_reset_requested: password_reset_requested?,
       )
     end
+  end
+
+  # TODO: Note proof of concept
+  def user_location
+    IpGeocoder.new(user_ip).location
+  end
+
+  # TODO: Note proof of concept
+  def user_ip
+    @analytics.request_attributes[:user_ip]
   end
 
   def extra_analytics_attributes
