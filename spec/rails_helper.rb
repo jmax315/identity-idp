@@ -89,6 +89,10 @@ RSpec.configure do |config|
     I18n.locale = :en
   end
 
+  Capybara.configure do |capy|
+    capy.default_max_wait_time = 20
+  end
+
   config.before(:each, js: true) do
     server = Capybara.current_session.server
     server_domain = "#{server.host}:#{server.port}"
