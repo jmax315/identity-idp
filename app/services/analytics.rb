@@ -8,21 +8,7 @@ class Analytics
   attr_reader :request, :sp, :ahoy, :irs_session_id, :events
 
   class FakeAhoy
-    attr_reader :events
-
-    def initialize
-      @events = {}
-    end
-
     def track(event, analytics_hash)
-      if analytics_hash[:proofing_components].instance_of?(Idv::ProofingComponentsLogging)
-        analytics_hash[:proofing_components] =
-          analytics_hash[:proofing_components].as_json.symbolize_keys
-      end
-      @events[event] ||= []
-
-      event_properties = analytics_hash[:event_properties].merge(user_id: analytics_hash[:user_id])
-      @events[event] << event_properties
     end
   end
 
