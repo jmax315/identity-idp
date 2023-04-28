@@ -1,11 +1,42 @@
 # frozen_string_literal: true
 
+class EmptyEventRecorder
+  attr_reader :events
+
+  def initialize
+    @events = {}
+  end
+
+  def record(event, attributes)
+  end
+end
+
+class EventRecorder < EmptyEventRecorder
+  def record(event, attributes)
+    # ToDo: see if we can not duplicate attributes hash
+    attributes_copy = attributes.dup
+    if attributes_copy[:proofing_components].instance_of?(Idv::ProofingComponentsLogging)
+      attributes_copy[:proofing_components] =
+        attributes_copy[:proofing_components].as_json.symbolize_keys
+    end
+    @events[event] ||= []
+    @events[event] << attributes_copy
+  end
+end
+
+class StubbedNewRelicAgent
+  def self.add_custom_attributes(custom_attributes)
+  end
+end
+
 class Analytics
+  extend Forwardable
   include AnalyticsEvents
   prepend Idv::AnalyticsEventsEnhancer
 
   attr_accessor :user
-  attr_reader :request, :sp, :ahoy, :irs_session_id, :events
+  attr_reader :request, :sp, :ahoy, :irs_session_id, :recorder
+  def_delegator :@recorder, :events
 
   class FakeAhoy
     def track(event, analytics_hash)
@@ -22,17 +53,27 @@ class Analytics
       sp: OpenStruct.new(value: 'some-sp'),
       session: {},
       ahoy: FakeAhoy.new,
+      recorder: EventRecorder.new,
+      new_relic_agent_class: StubbedNewRelicAgent,
     )
   end
 
-  def initialize(user:, request:, sp:, session:, ahoy: nil, irs_session_id: nil)
+  def initialize(user:,
+                 request:,
+                 sp:,
+                 session:,
+                 ahoy: nil,
+                 irs_session_id: nil,
+                 recorder: EmptyEventRecorder.new,
+                 new_relic_agent_class: ::NewRelic::Agent)
     @user = user
     @request = request
     @sp = sp
     @ahoy = ahoy || Ahoy::Tracker.new(request: request)
     @session = session
     @irs_session_id = irs_session_id
-    @events = {}
+    @recorder = recorder
+    @new_relic_agent_class = new_relic_agent_class
   end
 
   def track_event(event, attributes = {})
@@ -52,17 +93,11 @@ class Analytics
 
     ahoy.track(event, analytics_hash)
 
-    duped_attributes = attributes.dup
-    if duped_attributes[:proofing_components].instance_of?(Idv::ProofingComponentsLogging)
-      duped_attributes[:proofing_components] =
-        duped_attributes[:proofing_components].as_json.symbolize_keys
-    end
-    events[event] ||= []
-    events[event] << duped_attributes
+    recorder.record(event, attributes)
 
     # Tag NewRelic APM trace with a handful of useful metadata
     # https://www.rubydoc.info/github/newrelic/rpm/NewRelic/Agent#add_custom_attributes-instance_method
-    ::NewRelic::Agent.add_custom_attributes(
+    @new_relic_agent_class.add_custom_attributes(
       user_id: analytics_hash[:user_id],
       user_ip: request&.remote_ip,
       service_provider: sp,
