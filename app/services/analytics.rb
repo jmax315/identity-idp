@@ -13,7 +13,6 @@ end
 
 class EventRecorder < EmptyEventRecorder
   def record(event, attributes)
-    # ToDo: see if we can not duplicate attributes hash
     attributes_copy = attributes.dup
     if attributes_copy[:proofing_components].instance_of?(Idv::ProofingComponentsLogging)
       attributes_copy[:proofing_components] =
@@ -29,6 +28,11 @@ class StubbedNewRelicAgent
   end
 end
 
+class StubbedAhoy
+  def track(event, analytics_hash)
+  end
+end
+
 class Analytics
   extend Forwardable
   include AnalyticsEvents
@@ -38,13 +42,11 @@ class Analytics
   attr_reader :request, :sp, :ahoy, :irs_session_id, :recorder
   def_delegator :@recorder, :events
 
-  class FakeAhoy
-    def track(event, analytics_hash)
+  def self.create_null(user: nil, events: nil)
+    analytics_class = Class.new(Analytics) do
+      include events if events
     end
-  end
-
-  def self.create_null(user: nil)
-    Analytics.new(
+    analytics_class.new(
       user: user || AnonymousUser.new,
       request: OpenStruct.new(
         user_agent: 'some-user-agent',
@@ -52,9 +54,9 @@ class Analytics
       ),
       sp: OpenStruct.new(value: 'some-sp'),
       session: {},
-      ahoy: FakeAhoy.new,
+      ahoy: StubbedAhoy.new,
       recorder: EventRecorder.new,
-      new_relic_agent_class: StubbedNewRelicAgent,
+      new_relic_agent: StubbedNewRelicAgent,
     )
   end
 
@@ -65,7 +67,7 @@ class Analytics
                  ahoy: nil,
                  irs_session_id: nil,
                  recorder: EmptyEventRecorder.new,
-                 new_relic_agent_class: ::NewRelic::Agent)
+                 new_relic_agent: ::NewRelic::Agent)
     @user = user
     @request = request
     @sp = sp
@@ -73,7 +75,7 @@ class Analytics
     @session = session
     @irs_session_id = irs_session_id
     @recorder = recorder
-    @new_relic_agent_class = new_relic_agent_class
+    @new_relic_agent = new_relic_agent
   end
 
   def track_event(event, attributes = {})
@@ -97,7 +99,7 @@ class Analytics
 
     # Tag NewRelic APM trace with a handful of useful metadata
     # https://www.rubydoc.info/github/newrelic/rpm/NewRelic/Agent#add_custom_attributes-instance_method
-    @new_relic_agent_class.add_custom_attributes(
+    @new_relic_agent.add_custom_attributes(
       user_id: analytics_hash[:user_id],
       user_ip: request&.remote_ip,
       service_provider: sp,

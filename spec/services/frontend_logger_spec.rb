@@ -7,12 +7,13 @@ describe FrontendLogger do
     end
   end
 
-  let(:analytics_class) do
-    Class.new(FakeAnalytics) do
-      include ExampleAnalyticsEvents
-    end
+  let(:analytics) do
+    # analytics_class = Class.new(Analytics) do
+    #   include ExampleAnalyticsEvents
+    # end
+    # analytics_class.create_null(events: ExampleAnalyticsEvents)
+    Analytics.create_null(events: ExampleAnalyticsEvents)
   end
-  let(:analytics) { analytics_class.new }
 
   let(:event_map) do
     {
