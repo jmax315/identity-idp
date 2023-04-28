@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe RecaptchaEnterpriseValidator do
   let(:score_threshold) { 0.2 }
-  let(:analytics) { FakeAnalytics.new }
+  let(:analytics) { Analytics.create_null }
   let(:extra_analytics_properties) { {} }
   let(:action) { 'example_action' }
   let(:recaptcha_enterprise_api_key) { 'recaptcha_enterprise_api_key' }
