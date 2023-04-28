@@ -136,28 +136,28 @@ describe Analytics do
       analytics.track_event('Trackable Event')
     end
 
-    # relies on prepending the FakeAnalytics::PiiAlerter mixin
+    # relies on prepending the Analytics::PiiAlerter mixin
     it 'throws an error when pii is passed in' do
       allow(ahoy).to receive(:track)
 
       expect { analytics.track_event('Trackable Event') }.to_not raise_error
 
       expect { analytics.track_event('Trackable Event', first_name: 'Bobby') }.
-        to raise_error(FakeAnalytics::PiiDetected)
+        to raise_error(Analytics::PiiDetected)
 
       expect do
         analytics.track_event('Trackable Event', nested: [{ value: { first_name: 'Bobby' } }])
-      end.to raise_error(FakeAnalytics::PiiDetected)
+      end.to raise_error(Analytics::PiiDetected)
 
       expect { analytics.track_event('Trackable Event', decrypted_pii: '{"first_name":"Bobby"}') }.
-        to raise_error(FakeAnalytics::PiiDetected)
+        to raise_error(Analytics::PiiDetected)
     end
 
     it 'throws an error when it detects sample PII in the payload' do
       allow(ahoy).to receive(:track)
 
       expect { analytics.track_event('Trackable Event', some_benign_key: 'FAKEY MCFAKERSON') }.
-        to raise_error(FakeAnalytics::PiiDetected)
+        to raise_error(Analytics::PiiDetected)
     end
 
     it 'does not alert when pii_like_keypaths is passed' do

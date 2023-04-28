@@ -56,7 +56,7 @@ RSpec.configure do |config|
     Rails.application.load_seed
 
     class Analytics
-      prepend FakeAnalytics::PiiAlerter
+      prepend Analytics::PiiAlerter
     end
 
     begin
