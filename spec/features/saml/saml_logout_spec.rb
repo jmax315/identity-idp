@@ -150,8 +150,8 @@ feature 'SAML logout' do
     let(:agency) { sp.agency }
 
     it "terminates the user's session remotely" do
-      fake_analytics = FakeAnalytics.new
-      allow_any_instance_of(ApplicationController).to receive(:analytics).and_return(fake_analytics)
+      analytics = Analytics.create_null
+      allow_any_instance_of(ApplicationController).to receive(:analytics).and_return(analytics)
 
       # set up SP identity and agency identity
       user = sign_in_live_with_2fa
@@ -170,10 +170,10 @@ feature 'SAML logout' do
 
       expect(OutOfBandSessionAccessor.new(identity.rails_session_id).exists?).to eq false
 
-      expect(fake_analytics.events['Remote Logout initiated']).to eq(
+      expect(analytics.events['Remote Logout initiated']).to eq(
         [{ service_provider: sp.issuer, saml_request_valid: true }],
       )
-      expect(fake_analytics.events['Remote Logout completed']).to eq(
+      expect(analytics.events['Remote Logout completed']).to eq(
         [{ service_provider: sp.issuer, user_id: user.uuid }],
       )
 
