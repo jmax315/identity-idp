@@ -42,6 +42,8 @@ class Analytics
   attr_reader :request, :sp, :ahoy, :irs_session_id, :recorder
   def_delegator :@recorder, :events
 
+  class PiiDetected < StandardError; end
+
   def self.create_null(user: nil, events: nil, events_enhancer: nil)
     analytics_class = Class.new(Analytics) do
       include events if events
@@ -189,7 +191,7 @@ class Analytics
       string_payload = attributes.to_json
 
       if string_payload.include?('pii') && !pii_like_keypaths.include?([:pii])
-        raise PiiDetected, <<~ERROR
+        raise Analytics::PiiDetected, <<~ERROR
           track_event string 'pii' detected in attributes
           event: #{event} (#{constant_name})
           full event: #{attributes}"
@@ -205,7 +207,7 @@ class Analytics
         :state_id_number,
       ).each do |key, default_pii_value|
         if string_payload.match?(Regexp.new('\b' + Regexp.quote(default_pii_value) + '\b', 'i'))
-          raise PiiDetected, <<~ERROR
+          raise Analytics::PiiDetected, <<~ERROR
             track_event example PII #{key} (#{default_pii_value}) detected in attributes
             event: #{event} (#{constant_name})
             full event: #{attributes}"
@@ -223,7 +225,7 @@ class Analytics
           value.each do |key, val|
             current_keypath = keypath + [key]
             if pii_attr_names.include?(key) && !pii_like_keypaths.include?(current_keypath)
-              raise PiiDetected, <<~ERROR
+              raise Analytics::PiiDetected, <<~ERROR
                 track_event received pii key path: #{current_keypath.inspect}
                 event: #{event} (#{constant_name})
                 full event: #{attributes.inspect}
