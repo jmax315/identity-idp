@@ -12,7 +12,7 @@ def sign_in_with_idv_required(user:, sms_or_totp: :sms)
   click_submit_default
 end
 
-RSpec.feature 'IdV Outage Spec' do
+RSpec.feature 'IdV Outage Spec', js: true do
   include PersonalKeyHelper
   include IdvStepHelper
 
@@ -150,10 +150,14 @@ RSpec.feature 'IdV Outage Spec' do
     let(:feature_idv_force_gpo_verification_enabled) { true }
     let(:enable_usps_verification) { false }
 
-    it 'shows mail only warning page before idv welcome page' do
+    it 'shows full outage page before idv welcome page' do
       sign_in_with_idv_required(user: user)
 
       expect(current_path).to eq vendor_outage_path
+
+      puts "page.driver class: #{page.driver.class}"
+
+      page.driver.save_full_page_screenshot('ferd.png')
     end
   end
 
