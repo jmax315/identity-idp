@@ -27,18 +27,26 @@
     <p><%= t('idv.cancel.description.start_over') %></p>
 
     <div class="margin-top-4">
-      <%= render ButtonComponent.new(
-            action: ->(**tag_options, &block) do
-              button_to(idv_session_path(step: params[:step]), **tag_options, &block)
-            end,
-            method: :delete,
-            big: true,
-            wide: true,
-          ).with_content(t('idv.cancel.actions.start_over')) %>
+      <%=
+        render ButtonComponent.new(
+          action: ->(**tag_options, &block) do
+            options = tag_options.merge({
+              form: {aria_label: t('idv.cancel.actions.start_over')}
+            })
+            button_to(idv_session_path(step: params[:step]), **options, &block)
+          end,
+          method: :delete,
+          big: true,
+          wide: true,
+        ).with_content(t('idv.cancel.actions.start_over'))
+      %>
       <div class="margin-top-2">
         <%= render ButtonComponent.new(
               action: ->(**tag_options, &block) do
-                button_to(idv_cancel_path(step: params[:step]), **tag_options, &block)
+                options = tag_options.merge({
+                  form: {aria_label: t('idv.cancel.actions.keep_going')}
+                })
+                button_to(idv_cancel_path(step: params[:step]), **options, &block)
               end,
               method: :put,
               big: true,
@@ -59,7 +67,10 @@
     <div class="margin-top-4">
       <%= render SpinnerButtonComponent.new(
             action: ->(**tag_options, &block) do
-              button_to(idv_cancel_path(step: params[:step], location: 'cancel'), **tag_options, &block)
+              options = tag_options.merge({
+                form: {aria_label: @presenter.exit_action_text}
+              })
+              button_to(idv_cancel_path(step: params[:step], location: 'cancel'), **options, &block)
             end,
             method: :delete,
             big: true,
