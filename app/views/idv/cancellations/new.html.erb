@@ -31,7 +31,7 @@
         render ButtonComponent.new(
           action: ->(**tag_options, &block) do
             options = tag_options.merge({
-              form: {aria_label: t('idv.cancel.actions.start_over')}
+              form: {'aria-label': t('idv.cancel.actions.start_over')}
             })
             button_to(idv_session_path(step: params[:step]), **options, &block)
           end,

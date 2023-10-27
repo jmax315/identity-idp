@@ -1,5 +1,34 @@
 require 'rails_helper'
 
+RSpec::Matchers.define :have_button_to_with_accessibility do |expected_button_text, expected_destination|
+  match do |actual_text|
+    expected_aria_attributes = "aria-label=\"#{expected_button_text}\""
+    begin
+      button = Capybara.string(rendered).find_button(expected_button_text)
+    rescue Capybara::ElementNotFound
+      return false
+    end
+
+    button&.has_ancestor?("form[#{expected_aria_attributes}]")
+  end
+
+  failure_message do |actual_text|
+    begin
+      button = Capybara.string(rendered).find_button(expected_button_text)
+    rescue Capybara::ElementNotFound
+      return "expected to find a button with text '#{expected_button_text}'"
+    end
+
+    expected_aria_attributes = "aria-label=\"#{expected_button_text}\""
+    expected_form_action = "action=\"#{expected_destination}\""
+    expected_attributes = "[#{expected_aria_attributes}][#{expected_form_action}]"
+
+    unless button.has_ancestor?("form#{expected_attributes}")
+      return "expected the button to be inside a form with attributes '#{expected_attributes}'. Raw text: #{rendered}"
+    end
+  end
+end
+
 RSpec.describe 'idv/cancellations/new.html.erb' do
   let(:hybrid_session) { false }
   let(:params) { ActionController::Parameters.new }
@@ -14,12 +43,15 @@ RSpec.describe 'idv/cancellations/new.html.erb' do
     render
   end
 
-  it 'renders action to start over' do
-    expect(rendered).to have_button(t('idv.cancel.actions.start_over'))
+  it 'renders an action to keep going' do
+    expect(rendered).to have_button(t('idv.cancel.actions.keep_going'))
   end
 
-  it 'renders action to keep going' do
-    expect(rendered).to have_text(t('idv.cancel.actions.keep_going'))
+  it 'renders action to start over, with the correct aria attributes' do
+    expect(rendered).to have_button_to_with_accessibility(
+      t('idv.cancel.actions.start_over'),
+      idv_cancel_path(step: params[:step]),
+    )
   end
 
   it 'renders action to exit and go to account page' do
