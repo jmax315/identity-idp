@@ -1,58 +1,5 @@
 require 'rails_helper'
 
-class HaveButtonToWithAccessibilityMatcher
-  def initialize(expected_button_text, expected_action)
-    @expected_button_text = expected_button_text
-    @expected_action = expected_action
-  end
-
-  def match(actual_text)
-    @actual_text = actual_text
-    button&.has_ancestor?("form#{expected_attributes}")
-  end
-
-  def failure_message(actual_text)
-    @actual_text = actual_text
-
-    message = ''
-    if button
-      unless button.has_ancestor?("form#{expected_attributes}")
-        message += "expected the button to be inside a form with attributes '#{expected_attributes}'."
-      end
-    else
-      message  += "expected to find a button with text '#{@expected_button_text}'"
-    end
-
-    return message + "\n" + actual_text
-  end
-
-  private
-
-  def button
-    Capybara.string(@actual_text).find_button(@expected_button_text)
-  rescue Capybara::ElementNotFound
-    return nil
-  end
-
-  def expected_aria_attributes
-    "aria-label=\"#{@expected_button_text}\""
-  end
-
-  def expected_form_action
-    "action=\"#{@expected_action}\""
-  end
-
-  def expected_attributes
-    "[#{expected_aria_attributes}][#{expected_form_action}]"
-  end
-end
-
-RSpec::Matchers.define :have_button_to_with_accessibility do |expected_button_text, expected_action|
-  matcher = HaveButtonToWithAccessibilityMatcher.new(expected_button_text, expected_action)
-  match { |actual_text| matcher.match(actual_text) }
-  failure_message { |actual_text| matcher.failure_message(actual_text) }
-end
-
 RSpec.describe 'idv/cancellations/new.html.erb' do
   let(:hybrid_session) { false }
   let(:params) { ActionController::Parameters.new }
