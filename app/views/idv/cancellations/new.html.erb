@@ -44,7 +44,7 @@
         <%= render ButtonComponent.new(
               action: ->(**tag_options, &block) do
                 options = tag_options.merge({
-                  form: {aria_label: t('idv.cancel.actions.keep_going')}
+                  form: {'aria-label': t('idv.cancel.actions.keep_going')}
                 })
                 button_to(idv_cancel_path(step: params[:step]), **options, &block)
               end,
@@ -68,7 +68,7 @@
       <%= render SpinnerButtonComponent.new(
             action: ->(**tag_options, &block) do
               options = tag_options.merge({
-                form: {aria_label: @presenter.exit_action_text}
+                form: {"aria-label": @presenter.exit_action_text}
               })
               button_to(idv_cancel_path(step: params[:step], location: 'cancel'), **options, &block)
             end,
