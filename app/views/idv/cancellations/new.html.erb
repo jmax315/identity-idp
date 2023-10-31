@@ -30,28 +30,24 @@
       <%=
         render ButtonComponent.new(
           action: ->(**tag_options, &block) do
-            options = tag_options.merge({
-              form: {'aria-label': t('idv.cancel.actions.start_over')}
-            })
-            button_to(idv_session_path(step: params[:step]), **options, &block)
+            button_to(idv_session_path(step: params[:step]), **tag_options, &block)
           end,
           method: :delete,
           big: true,
           wide: true,
+          form: {'aria-label': t('idv.cancel.actions.start_over')}
         ).with_content(t('idv.cancel.actions.start_over'))
       %>
       <div class="margin-top-2">
         <%= render ButtonComponent.new(
               action: ->(**tag_options, &block) do
-                options = tag_options.merge({
-                  form: {'aria-label': t('idv.cancel.actions.keep_going')}
-                })
-                button_to(idv_cancel_path(step: params[:step]), **options, &block)
+                button_to(idv_cancel_path(step: params[:step]), **tag_options, &block)
               end,
               method: :put,
               big: true,
               wide: true,
               outline: true,
+              form: {'aria-label': t('idv.cancel.actions.keep_going')}
             ).with_content(t('idv.cancel.actions.keep_going')) %>
       </div>
     </div>
@@ -67,16 +63,16 @@
     <div class="margin-top-4">
       <%= render SpinnerButtonComponent.new(
             action: ->(**tag_options, &block) do
-              options = tag_options.merge({
-                form: {"aria-label": @presenter.exit_action_text}
-              })
-              button_to(idv_cancel_path(step: params[:step], location: 'cancel'), **options, &block)
+              button_to(idv_cancel_path(step: params[:step], location: 'cancel'), **tag_options, &block)
             end,
             method: :delete,
             big: true,
             wide: true,
             outline: true,
-            form: { data: { form_steps_wait: '' } },
+            form: {
+              "aria-label": @presenter.exit_action_text,
+              data: { form_steps_wait: '' }
+            },
           ).with_content(@presenter.exit_action_text) %>
     </div>
   <% end %>
