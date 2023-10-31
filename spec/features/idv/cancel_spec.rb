@@ -40,8 +40,7 @@ RSpec.describe 'cancel IdV' do
       have_name(t('idv.cancel.actions.keep_going')),
     )
 
-    keep_going_button = page.find_button(t('idv.cancel.actions.keep_going'))
-    keep_going_button.click
+    page.find_button(t('idv.cancel.actions.keep_going')).click
 
     expect(current_path).to eq(original_path)
     expect(fake_analytics).to have_logged_event(
@@ -58,6 +57,18 @@ RSpec.describe 'cancel IdV' do
     expect(fake_analytics).to have_logged_event(
       'IdV: cancellation visited',
       hash_including(step: 'agreement'),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.start_over'))).to(
+      have_name(t('idv.cancel.actions.start_over')),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.account_page'))).to(
+      have_name(t('idv.cancel.actions.account_page')),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.keep_going'))).to(
+      have_name(t('idv.cancel.actions.keep_going')),
     )
 
     click_on t('idv.cancel.actions.start_over')
@@ -77,6 +88,18 @@ RSpec.describe 'cancel IdV' do
     expect(fake_analytics).to have_logged_event(
       'IdV: cancellation visited',
       hash_including(step: 'agreement'),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.start_over'))).to(
+      have_name(t('idv.cancel.actions.start_over')),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.account_page'))).to(
+      have_name(t('idv.cancel.actions.account_page')),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.keep_going'))).to(
+      have_name(t('idv.cancel.actions.keep_going')),
     )
 
     click_spinner_button_and_wait t('idv.cancel.actions.account_page')
@@ -107,6 +130,18 @@ RSpec.describe 'cancel IdV' do
         proofing_components: { document_check: 'mock', document_type: 'state_id' },
         request_came_from: 'idv/ssn#show',
         step: 'ssn',
+      )
+
+      expect(page.find_button(t('idv.cancel.actions.start_over'))).to(
+        have_name(t('idv.cancel.actions.start_over')),
+      )
+
+      expect(page.find_button(t('idv.cancel.actions.account_page'))).to(
+        have_name(t('idv.cancel.actions.account_page')),
+      )
+
+      expect(page.find_button(t('idv.cancel.actions.keep_going'))).to(
+        have_name(t('idv.cancel.actions.keep_going')),
       )
 
       click_on t('idv.cancel.actions.keep_going')
@@ -155,6 +190,18 @@ RSpec.describe 'cancel IdV' do
       expect(fake_analytics).to have_logged_event(
         'IdV: cancellation visited',
         hash_including(step: 'agreement'),
+      )
+
+      expect(page.find_button(t('idv.cancel.actions.start_over'))).to(
+        have_name(t('idv.cancel.actions.start_over')),
+      )
+
+      expect(page.find_button(t('idv.cancel.actions.exit', app_name: APP_NAME))).to(
+        have_name(t('idv.cancel.actions.exit', app_name: APP_NAME)),
+      )
+
+      expect(page.find_button(t('idv.cancel.actions.keep_going'))).to(
+        have_name(t('idv.cancel.actions.keep_going')),
       )
 
       click_spinner_button_and_wait t('idv.cancel.actions.exit', app_name: APP_NAME)
