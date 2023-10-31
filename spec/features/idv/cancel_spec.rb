@@ -28,9 +28,19 @@ RSpec.describe 'cancel IdV' do
       hash_including(step: 'agreement'),
     )
 
-    keep_going_button = page.find_button(t('idv.cancel.actions.keep_going'))
-    expect(keep_going_button).to have_name(t('idv.cancel.actions.keep_going'))
+    expect(page.find_button(t('idv.cancel.actions.start_over'))).to(
+      have_name(t('idv.cancel.actions.start_over')),
+    )
 
+    expect(page.find_button(t('idv.cancel.actions.account_page'))).to(
+      have_name(t('idv.cancel.actions.account_page')),
+    )
+
+    expect(page.find_button(t('idv.cancel.actions.keep_going'))).to(
+      have_name(t('idv.cancel.actions.keep_going')),
+    )
+
+    keep_going_button = page.find_button(t('idv.cancel.actions.keep_going'))
     keep_going_button.click
 
     expect(current_path).to eq(original_path)
