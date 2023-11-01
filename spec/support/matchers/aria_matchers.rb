@@ -10,7 +10,7 @@ class HaveButtonToWithAccessibilityMatcher
   end
 
   def match(actual_text)
-    @actual ||= Capybara.string(actual_text)
+    @actual ||= Capybara.string(actual_text.strip)
 
     button && enclosing_form && aria_label_ok? && action_ok?
   end
