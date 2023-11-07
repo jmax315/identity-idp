@@ -41,9 +41,9 @@ RSpec.feature 'phone otp rate limiting', :js do
         click_button t('forms.buttons.submit.default')
       end
 
-      expect(page).to have_content t('titles.account_locked')
+      expect(page).to have_content t('idv.failure.phone.rate_limited.otp_entry.title')
       expect(page).
-        to have_content t('two_factor_authentication.max_otp_login_attempts_reached')
+        to have_content t('idv.failure.phone.rate_limited.otp_entry.explanation')
 
       expect_rate_limit_circumvention_to_be_disallowed(user)
       expect_rate_limit_to_expire(user)
@@ -58,7 +58,7 @@ RSpec.feature 'phone otp rate limiting', :js do
     start_idv_from_sp
     complete_idv_steps_before_phone_step(user)
 
-    expect(page).to have_content t('titles.account_locked')
+    expect(page).to have_content t('idv.failure.phone.rate_limited.otp_entry.title')
     expect(Telephony::Test::Message.messages).to eq([])
     expect(Telephony::Test::Call.calls).to eq([])
   end
