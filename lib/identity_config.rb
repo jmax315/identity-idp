@@ -17,11 +17,15 @@ class IdentityConfig
     # Allows loading a string configuration from a system environment variable
     # ex: To read DATABASE_HOST from system environment for the database_host key
     # database_host: ['env', 'DATABASE_HOST']
+    # ex: To read database_host from secrets manager
+    # database_host: ['secretsmanager', 'database_host']
     # To use a string value directly, you can specify a string explicitly:
     # database_host: 'localhost'
-    string: proc do |value|
+    string: proc do |value, options: {}|
       if value.is_a?(Array) && value.length == 2 && value.first == 'env'
         ENV.fetch(value[1])
+      elsif value.is_a?(Array) && value.length == 2 && value.first == 'secretsmanager'
+        options[:secrets_manager].call(value[1])
       elsif value.is_a?(String)
         value
       else
@@ -70,10 +74,23 @@ class IdentityConfig
     @key_types = {}
   end
 
+  def secrets_manager_client
+    @secrets_manager_client ||= Aws::SecretsManager::Client.new(region: 'us-west-2')
+  end
+
+  def build_secrets_manager_key(key)
+    "mhenke/idp/#{key}"
+  end
+
   def add(key, type: :string, allow_nil: false, enum: nil, options: {})
     value = @read_env[key]
 
     @key_types[key] = type
+
+    options[:secrets_manager] = lambda do |key|
+      full_key = build_secrets_manager_key(key)
+      secrets_manager_client.get_secret_value(secret_id: full_key).secret_string
+    end
 
     converted_value = CONVERTERS.fetch(type).call(value, options: options) if !value.nil?
     raise "#{key} is required but is not present" if converted_value.nil? && !allow_nil
@@ -83,6 +100,7 @@ class IdentityConfig
 
     @written_env[key] = converted_value.freeze
     @written_env
+
   end
 
   attr_reader :written_env

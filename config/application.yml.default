@@ -384,7 +384,7 @@ development:
   dashboard_url: http://localhost:3001/api/service_providers
   database_host: ''
   database_name: ''
-  database_password: ''
+  database_password: ['secretsmanager', 'database_password']
   database_read_replica_host: ''
   database_readonly_password: ''
   database_readonly_username: ''
