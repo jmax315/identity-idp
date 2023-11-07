@@ -34,15 +34,25 @@ module Idv
 
     def handle_too_many_otp_attempts
       analytics.idv_phone_confirmation_otp_rate_limit_attempts
-      handle_max_attempts('otp_login_attempts')
+      handle_max_attempts('otp_phone_confirmation_attempts')
     end
 
     def handle_max_attempts(type)
-      presenter = TwoFactorAuthCode::MaxAttemptsReachedPresenter.new(
-        type,
-        current_user,
-      )
-      render_full_width('two_factor_authentication/_locked', locals: { presenter: presenter })
+      if type == 'otp_phone_confirmation_attempts'
+        presenter = Idv::OtpEntryRateLimitedPresenter.new(
+          sp_name: decorated_sp_session.sp_name,
+          user: current_user,
+        )
+        path = 'idv/phone_errors/_otp_too_many_entries'
+      else
+        presenter = TwoFactorAuthCode::MaxAttemptsReachedPresenter.new(
+          type,
+          current_user,
+        )
+        path = 'two_factor_authentication/_locked'
+      end
+
+      render_full_width(path, locals: { presenter: presenter })
     end
   end
 end
