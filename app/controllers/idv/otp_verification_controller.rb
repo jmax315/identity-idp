@@ -71,6 +71,16 @@ module Idv
       end
     end
 
+    def handle_too_many_otp_attempts
+      analytics.idv_phone_confirmation_otp_rate_limit_attempts
+      render_full_width(
+        'idv/phone_errors/_locked',
+        locals: { presenter: Idv::PhoneConfirmationOtpLockoutPresenter.new(
+          current_user,
+        ) },
+      )
+    end
+
     def save_in_person_notification_phone
       return unless IdentityConfig.store.in_person_send_proofing_notifications_enabled
       return unless in_person_enrollment?

@@ -252,7 +252,8 @@ module Users
     end
 
     def exceeded_otp_send_limit?
-      return otp_rate_limiter.lock_out_user if otp_rate_limiter.exceeded_otp_send_limit?
+      otp_rate_limiter.exceeded_otp_send_limit? &&
+        otp_rate_limiter.lock_out_user('two factor attempts')
     end
 
     def phone_confirmation_rate_limiter

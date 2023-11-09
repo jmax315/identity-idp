@@ -44,7 +44,7 @@ module Idv
 
     def rate_limit_exceeded?
       if otp_rate_limiter.exceeded_otp_send_limit?
-        otp_rate_limiter.lock_out_user
+        otp_rate_limiter.lock_out_user('phone confirmation attempts')
         return @user_locked_out = true
       end
       false

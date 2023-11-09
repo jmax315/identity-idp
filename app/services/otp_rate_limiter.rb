@@ -26,8 +26,14 @@ class OtpRateLimiter
     rate_limiter.reset!
   end
 
-  def lock_out_user
-    UpdateUser.new(user: user, attributes: { second_factor_locked_at: Time.zone.now }).call
+  def lock_out_user(reason)
+    UpdateUser.new(
+      user: user,
+      attributes: {
+        second_factor_locked_at: Time.zone.now,
+        lockout_reason: reason,
+      },
+    ).call
   end
 
   def increment

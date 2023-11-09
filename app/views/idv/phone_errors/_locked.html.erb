@@ -1,0 +1,26 @@
+<% self.title = presenter.title %>
+
+<%= render StatusPageComponent.new(status: :error) do |c| %>
+  <% c.with_header { presenter.title } %>
+
+  <p>
+    <%= presenter.reason(
+      render(
+        CountdownComponent.new(expiration: presenter.user.lockout_time_expiration),
+      ),
+    )
+    %>
+  </p>
+
+  <div class="margin-top-4">
+    <%= link_to(presenter.exit_action_text) %>
+  </div>
+
+  <% c.with_troubleshooting_options do |tc| %>
+    <% tc.with_header { presenter.troubleshooting_header } %>
+    <% tc.with_option(
+      url: MarketingSite.contact_url,
+      new_tab: true,
+    ).with_content(presenter.contact_support_action_text) %>
+  <% end %>
+<% end %>
