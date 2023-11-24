@@ -10,9 +10,11 @@ module Proofing
       INVALID_STATE_ID_NUMBER = '00000000'
       TRANSACTION_ID = 'state-id-mock-transaction-id-456'
       TRIGGER_MVA_TIMEOUT = 'mvatimeout'
+      TRIGGER_AAMVA_ERROR = 'aamvaerror'
 
       def proof(applicant)
         return mva_timeout_result if mva_timeout?(applicant[:state_id_number])
+        return aamva_error if aamva_error?(applicant[:state_id_number])
 
         errors = {}
         if state_not_supported?(applicant[:state_id_jurisdiction])
@@ -48,6 +50,18 @@ module Proofing
         )
       end
 
+      def aamva_error_result
+        StateIdResult.new(
+          success: false,
+          errors: {},
+          exception: Proofing::TimeoutError.new(
+            'Simulated AAMVA error from mock proofer',
+          ),
+          vendor_name: 'aamva:state_id',
+          transaction_id: TRANSACTION_ID,
+        )
+      end
+
       def unverifiable_result(errors)
         StateIdResult.new(
           success: false,
@@ -56,6 +70,11 @@ module Proofing
           vendor_name: 'StateIdMock',
           transaction_id: TRANSACTION_ID,
         )
+      end
+
+      def aamva_error?(state_id_number)
+        return false if state_id_number.blank?
+        state_id_number.downcase == TRIGGER_AAMVA_ERROR
       end
 
       def mva_timeout?(state_id_number)
