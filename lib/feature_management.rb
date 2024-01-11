@@ -11,7 +11,7 @@ class FeatureManagement
 
   def self.idv_available?
     return false if !IdentityConfig.store.idv_available
-    !OutageStatus.new.any_idv_vendor_outage?
+    # !OutageStatus.new.any_idv_vendor_outage?
   end
 
   def self.development_and_identity_pki_disabled?
@@ -157,8 +157,8 @@ class FeatureManagement
   end
 
   def self.idv_by_mail_only?
-    outage_status = OutageStatus.new
     false
+    # outage_status = OutageStatus.new
     # IdentityConfig.store.feature_idv_force_gpo_verification_enabled ||
     #   outage_status.any_phone_vendor_outage? ||
     #   outage_status.phone_finder_outage?

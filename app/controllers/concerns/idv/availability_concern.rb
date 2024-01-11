@@ -9,7 +9,7 @@ module Idv
     def redirect_if_idv_unavailable
       return if FeatureManagement.idv_available?
 
-      # redirect_to idv_unavailable_url
+      redirect_to idv_unavailable_url
     end
   end
 end
