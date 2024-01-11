@@ -40,10 +40,16 @@ class RateLimiter
   end
 
   def attempted_at
+    # if rate_limit_type == :idv_resolution
+    #   puts "attempted_at(1): @redis_attempted_at: #{@redis_attempted_at}"
+    # end
     return @redis_attempted_at if defined?(@redis_attempted_at)
 
     fetch_state!
 
+    # if rate_limit_type == :idv_resolution
+    #   puts "attempted_at(2): @redis_attempted_at: #{@redis_attempted_at}"
+    # end
     @redis_attempted_at
   end
 
@@ -59,6 +65,10 @@ class RateLimiter
   end
 
   def expired?
+    if rate_limit_type == :idv_resolution
+      puts "expired?: expires_at: #{expires_at}; now: #{Time.zone.now}"
+    end
+
     return nil if expires_at.nil?
     expires_at <= Time.zone.now
   end
@@ -82,7 +92,32 @@ class RateLimiter
     end
 
     @redis_attempts = value.to_i
-    @redis_attempted_at = Time.zone.now
+
+    if rate_limit_type == :idv_resolution
+      puts "increment!(1): @redis_attempted_at: #{@redis_attempted_at}"
+    end
+
+    if rate_limit_type == :idv_resolution
+      puts "redis:"
+      system "redis-cli expiretime #{key}"
+    end
+
+    # @redis_attempted_at = Time.zone.now
+    expiretime = nil
+    REDIS_THROTTLE_POOL.with do |client|
+      expiretime = client.multi do |multi|
+        multi.expiretime(key)
+      end
+    end
+
+    if expiretime.first > 0
+      @redis_attempted_at =
+        ActiveSupport::TimeZone['UTC'].at(expiretime.first)
+    end
+      
+    if rate_limit_type == :idv_resolution
+      puts "increment!(2): @redis_attempted_at: #{@redis_attempted_at}"
+    end
 
     attempts
   end
@@ -103,10 +138,16 @@ class RateLimiter
 
     if expiretime < 0
       @redis_attempted_at = nil
+      if rate_limit_type == :idv_resolution
+        puts "fetch_state(1)!: @redis_attempted_at: #{@redis_attempted_at}"
+      end
     else
       @redis_attempted_at =
         ActiveSupport::TimeZone['UTC'].at(expiretime).in_time_zone(Time.zone) -
         RateLimiter.attempt_window_in_minutes(rate_limit_type).minutes
+      if rate_limit_type == :idv_resolution
+        puts "fetch_state(2)!: @redis_attempted_at: #{@redis_attempted_at}"
+      end
     end
 
     self
