@@ -152,15 +152,16 @@ class FeatureManagement
   # Whether or not idv hybrid mode is available
   def self.idv_allow_hybrid_flow?
     return false unless IdentityConfig.store.feature_idv_hybrid_flow_enabled
-    return false if OutageStatus.new.any_phone_vendor_outage?
+    # return false if OutageStatus.new.any_phone_vendor_outage?
     true
   end
 
   def self.idv_by_mail_only?
     outage_status = OutageStatus.new
-    IdentityConfig.store.feature_idv_force_gpo_verification_enabled ||
-      outage_status.any_phone_vendor_outage? ||
-      outage_status.phone_finder_outage?
+    false
+    # IdentityConfig.store.feature_idv_force_gpo_verification_enabled ||
+    #   outage_status.any_phone_vendor_outage? ||
+    #   outage_status.phone_finder_outage?
   end
 
   def self.idv_allow_selfie_check?
