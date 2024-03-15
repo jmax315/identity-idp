@@ -7,6 +7,14 @@ class AccountsController < ApplicationController
 
   def show
     analytics.account_visit
+
+    analytics.idv_doc_auth_verify_proofing_results(
+      idv_result_to_form_response(
+        state_id_jurisdiction: 'NJ',
+        result: { success: true },
+      ),
+    )
+
     session[:account_redirect_path] = account_path
     cacher = Pii::Cacher.new(current_user, user_session)
     @presenter = AccountShowPresenter.new(
