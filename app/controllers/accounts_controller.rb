@@ -8,9 +8,15 @@ class AccountsController < ApplicationController
   def show
     analytics.account_visit
 
+    states = %w[ AK AL AR AZ CA CO CT DE FL GA
+                 HI IA ID IL IN KS KY LA MA MD
+                 ME MI MN MO MS MT NC ND NE NH
+                 NJ NM NV NY OH OK OR PA RI SC
+                 SD TN TX UT VA VT WA WI WV WY ]
+
     analytics.idv_doc_auth_verify_proofing_results(
       idv_result_to_form_response(
-        state_id_jurisdiction: 'NJ',
+        state_id_jurisdiction: states.sample,
         result: { success: true },
       ),
     )
