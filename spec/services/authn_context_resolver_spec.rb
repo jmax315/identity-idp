@@ -1,11 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AuthnContextResolver do
+  let(:user) { build(:user) }
+
   context 'when the user uses a vtr param' do
     it 'parses the vtr param into requirements' do
       vtr = ['C2.Pb']
 
       result = AuthnContextResolver.new(
+        user: user,
         service_provider: nil,
         vtr: vtr,
         acr_values: nil,
@@ -29,12 +32,98 @@ RSpec.describe AuthnContextResolver do
       ].join(' ')
 
       result = AuthnContextResolver.new(
+        user: user,
         service_provider: nil,
         vtr: vtr,
         acr_values: acr_values,
       ).resolve
 
       expect(result.component_values.map(&:name).join('.')).to eq('C1.C2.P1.Pb')
+    end
+  end
+
+  context 'when the user uses a vtr param with multiple vectors' do
+    context 'a biometric proofing vector and non-biometric proofing vector is present' do
+      it 'returns a biometric requirement if the user can satisfy it' do
+        user = create(:user, :proofed)
+        user.active_profile.update!(idv_level: 'unsupervised_with_selfie')
+        vtr = ['C2.Pb', 'C2.P1']
+
+        result = AuthnContextResolver.new(
+          user: user,
+          service_provider: nil,
+          vtr: vtr,
+          acr_values: nil,
+        ).resolve
+
+        expect(result.expanded_component_values).to eq('C1.C2.P1.Pb')
+        expect(result.biometric_comparison?).to eq(true)
+        expect(result.identity_proofing?).to eq(true)
+      end
+
+      it 'returns the non-biometric vector if the user has identity-proofed without biometric' do
+        user = create(:user, :proofed)
+        vtr = ['C2.Pb', 'C2.P1']
+
+        result = AuthnContextResolver.new(
+          user: user,
+          service_provider: nil,
+          vtr: vtr,
+          acr_values: nil,
+        ).resolve
+
+        expect(result.expanded_component_values).to eq('C1.C2.P1')
+        expect(result.biometric_comparison?).to eq(false)
+        expect(result.identity_proofing?).to eq(true)
+      end
+
+      it 'returns the first vector if the user has not proofed' do
+        user = create(:user)
+        vtr = ['C2.Pb', 'C2.P1']
+
+        result = AuthnContextResolver.new(
+          user: user,
+          service_provider: nil,
+          vtr: vtr,
+          acr_values: nil,
+        ).resolve
+
+        expect(result.expanded_component_values).to eq('C1.C2.P1.Pb')
+        expect(result.biometric_comparison?).to eq(true)
+        expect(result.identity_proofing?).to eq(true)
+      end
+    end
+
+    context 'a non-biometric identity proofing vector is present' do
+      it 'returns the identity-proofing requirement if the user can satisfy it' do
+        user = create(:user, :proofed)
+        vtr = ['C2', 'C2.P1']
+
+        result = AuthnContextResolver.new(
+          user: user,
+          service_provider: nil,
+          vtr: vtr,
+          acr_values: nil,
+        ).resolve
+
+        expect(result.expanded_component_values).to eq('C1.C2.P1')
+        expect(result.identity_proofing?).to eq(true)
+      end
+
+      it 'returns the first vector if the user cannot satisfy the identity-proofing requirement' do
+        user = create(:user)
+        vtr = ['C2', 'C2.P1']
+
+        result = AuthnContextResolver.new(
+          user: user,
+          service_provider: nil,
+          vtr: vtr,
+          acr_values: nil,
+        ).resolve
+
+        expect(result.expanded_component_values).to eq('C1.C2')
+        expect(result.identity_proofing?).to eq(false)
+      end
     end
   end
 
@@ -47,6 +136,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: nil,
           vtr: nil,
           acr_values: acr_values,
@@ -67,6 +157,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: nil,
           vtr: nil,
           acr_values: acr_values,
@@ -87,6 +178,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: nil,
           vtr: nil,
           acr_values: acr_values,
@@ -112,6 +204,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: service_provider,
           vtr: nil,
           acr_values: acr_values,
@@ -128,6 +221,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: service_provider,
           vtr: nil,
           acr_values: acr_values,
@@ -145,6 +239,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: service_provider,
           vtr: nil,
           acr_values: acr_values,
@@ -162,6 +257,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: service_provider,
           vtr: nil,
           acr_values: acr_values,
@@ -181,6 +277,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: service_provider,
           vtr: nil,
           acr_values: acr_values,
@@ -198,6 +295,7 @@ RSpec.describe AuthnContextResolver do
         ].join(' ')
 
         result = AuthnContextResolver.new(
+          user: user,
           service_provider: service_provider,
           vtr: nil,
           acr_values: acr_values,

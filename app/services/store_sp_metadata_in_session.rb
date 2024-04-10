@@ -22,6 +22,7 @@ class StoreSpMetadataInSession
     return nil if !sp_request.vtr && !sp_request.acr_values
 
     @parsed_vot ||= AuthnContextResolver.new(
+      user: nil,
       service_provider: service_provider,
       vtr: sp_request.vtr,
       acr_values: sp_request.acr_values,

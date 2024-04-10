@@ -41,6 +41,7 @@ class OpenidConnectUserInfoPresenter
   private
 
   def vot_values
+    # TODO: Figure out which VTR to expand and use here!!
     vot = JSON.parse(identity.vtr).first
     parsed_vot = Vot::Parser.new(vector_of_trust: vot).parse
     parsed_vot.expanded_component_values

@@ -216,6 +216,9 @@ RSpec.feature 'SAML requests using VTR', allowed_extra_analytics: [:*] do
     expect_successful_saml_redirect
   end
 
+  # TODO: Make sure this works for SAML
+  scenario 'sign in with VTR includes the correct VOT in the response'
+
   def expect_successful_saml_redirect
     if javascript_enabled?
       expect(current_path).to eq(test_saml_decode_assertion_path)
