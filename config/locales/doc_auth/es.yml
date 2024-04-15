@@ -210,9 +210,9 @@ es:
       getting_started_html: '%{sp_name} necesita asegurarse de que se trata de usted y
         no de alguien que se hace pasar por usted. %{link_html}'
       getting_started_learn_more: Obtenga más información sobre la verificación de su identidad
-      how_to_verify: Tiene la opción de verificar su identidad en línea o en persona
+      how_to_verify: Tiene la opción de verificar su identidad en línea, o en persona
         en una oficina de correos participante.
-      how_to_verify_troubleshooting_options_header: '¿Desea obtener más información sobre cómo verificar su identidad?'
+      how_to_verify_troubleshooting_options_header: ¿Desea obtener más información sobre cómo verificar su identidad?
       hybrid_handoff: Recopilaremos información sobre usted leyendo su identificación
         emitida por el estado.
       hybrid_handoff_ipp_html: '<strong>¿No tiene un teléfono móvil?</strong> Puede
@@ -256,9 +256,9 @@ es:
       verify_at_post_office_description: Esta opción es mejor si no tiene un teléfono
         para tomar fotografías de su identificación.
       verify_at_post_office_instruction: Ingresará la información de su identificación
-        en línea y verificará su identidad en persona en una oficina de correos
+        en línea, y verificará su identidad en persona en una oficina de correos
         participante.
-      verify_at_post_office_link_text: Obtenga más información sobre la verificación en persona
+      verify_at_post_office_link_text: Obtenga más información sobre la verificación en persona.
       verify_identity: Le pediremos su identificación, número de teléfono y otros
         datos personales para verificar su identidad comparándola con los
         registros públicos.
@@ -267,7 +267,7 @@ es:
       verify_online_instruction: Tomará fotografías de su identificación para
         verificar su identidad por completo en línea. La mayoría de los usuarios
         logran terminar este proceso en una sola sesión.
-      verify_online_link_text: Obtenga más información sobre la verificación en línea
+      verify_online_link_text: Obtenga más información sobre la verificación en línea.
       you_entered: 'Usted ingresó:'
     instructions:
       bullet1: Tener una licencia de conducir o una tarjeta de identificación estatal

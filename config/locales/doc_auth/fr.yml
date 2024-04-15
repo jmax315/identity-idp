@@ -180,7 +180,7 @@ fr:
       document_capture_subheader_selfie: Photo de votre visage
       document_capture_with_selfie: Ajouter des photos de votre pièce d’identité et une photo de vous-même
       front: Recto de votre permis de conduire ou de votre carte d’identité d’un État
-      how_to_verify: Choisissez la manière dont vous souhaitez confirmer votre identité
+      how_to_verify: Choisir la manière dont vous souhaitez confirmer votre identité
       hybrid_handoff: Comment voulez-vous ajouter votre pièce d’identité ?
       hybrid_handoff_selfie: Saisir votre numéro de téléphone pour changer d’appareil
       interstitial: Nous traitons vos images
@@ -194,7 +194,7 @@ fr:
       text_message: Nous avons envoyé un message à votre téléphone
       upload_from_computer: Continuer sur cet ordinateur
       upload_from_phone: Utiliser votre téléphone pour prendre des photos
-      verify_at_post_office: Confirmer votre identité dans un bureau de poste
+      verify_at_post_office: Confirmer votre identité en personne dans un bureau de poste
       verify_identity: Confirmer votre identité
       verify_online: Confirmer votre identité en ligne
       welcome: Vérifions votre identité auprès de %{sp_name}
@@ -224,9 +224,9 @@ fr:
       getting_started_html: '%{sp_name} doit s’assurer qu’il s’agit bien de vous et
         non de quelqu’un qui se fait passer pour vous. %{link_html}'
       getting_started_learn_more: En savoir plus sur la vérification de votre identité
-      how_to_verify: Vous avez la possibilité de vérifier votre identité en ligne ou
-        en personne dans un bureau de poste participant.
-      how_to_verify_troubleshooting_options_header: Vous voulez en savoir plus sur la façon de confirmer votre identité ?
+      how_to_verify: Vous pouvez confirmer votre identité en ligne ou en personne dans
+        un bureau de poste participant.
+      how_to_verify_troubleshooting_options_header: Vous voulez en savoir plus sur la façon de confirmer votre identité?
       hybrid_handoff: Nous recueillerons des informations vous concernant en lisant
         votre pièce d’identité délivrée par un État.
       hybrid_handoff_ipp_html: '<strong>Vous n’avez pas de téléphone
@@ -274,20 +274,21 @@ fr:
         ordinateur après avoir pris des photos. Votre téléphone portable doit
         être équipé d’un appareil photo et d’un navigateur web.
       verify_at_post_office_description: Cette option est préférable si vous n’avez
-        pas de téléphone pour prendre des photos de votre pièce d’identité.
+        pas de téléphone permettant de prendre des photos de votre pièce
+        d’identité.
       verify_at_post_office_instruction: Vous saisirez vos données d’identification en
         ligne et confirmerez votre identité en personne dans un bureau de poste
         participant.
-      verify_at_post_office_link_text: En savoir plus sur la vérification en personne
+      verify_at_post_office_link_text: En savoir plus sur la vérification en personne.
       verify_identity: Nous vous demanderons votre pièce d’identité, numéro de
         téléphone et d’autres renseignements personnels afin de confirmer votre
         identité par rapport aux registres publics.
       verify_online_description: Cette option est préférable si vous disposez d’un
-        téléphone pour prendre des photos de votre pièce d’identité.
+        téléphone permettant de prendre des photos de votre pièce d’identité.
       verify_online_instruction: Vous prendrez des photos de votre pièce d’identité
         pour confirmer votre identité entièrement en ligne. La plupart des
-        utilisateurs effectuent l’ensemble du processus en une seule fois.
-      verify_online_link_text: En savoir plus sur la vérification en ligne
+        utilisateurs y parviennent en une seule prise.
+      verify_online_link_text: En savoir plus sur la vérification en ligne.
       you_entered: 'Vous avez saisi :'
     instructions:
       bullet1: Présenter votre permis de conduire ou votre carte d’identité d’un État
