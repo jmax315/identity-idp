@@ -5031,7 +5031,16 @@ module AnalyticsEvents
   # @param [String, nil] sign_in_flow
   # @param [String, nil] vtr
   # @param [String, nil] acr_values
-  def sp_redirect_initiated(ial:, billed_ial:, sign_in_flow:, vtr:, acr_values:, **extra)
+  # @param [Integer] sign_in_duration_seconds
+  def sp_redirect_initiated(
+    ial:,
+    billed_ial:,
+    sign_in_flow:,
+    vtr:,
+    acr_values:,
+    sign_in_duration_seconds:,
+    **extra
+  )
     track_event(
       'SP redirect initiated',
       ial:,
@@ -5039,6 +5048,7 @@ module AnalyticsEvents
       sign_in_flow:,
       vtr: vtr,
       acr_values: acr_values,
+      sign_in_duration_seconds:,
       **extra,
     )
   end
