@@ -24,7 +24,7 @@ RSpec.describe Idv::ByMail::LetterEnqueuedPresenter do
   let(:user_session) { {} }
   let(:service_provider) { nil }
   let(:pii) do
-    Idp::Constants::MOCK_IDV_APPLICANT.keys.inject({}) do |pii, key|
+    Idp::Constants::MOCK_IDV_APPLICANT.keys.each_with_object({}) do |key, pii|
       pii[key] = nil
       pii
     end
@@ -42,7 +42,7 @@ RSpec.describe Idv::ByMail::LetterEnqueuedPresenter do
               city: 'Anytown',
               state: 'OK',
               zipcode: '99999',
-            }
+            },
           )
         end
 
@@ -65,7 +65,7 @@ RSpec.describe Idv::ByMail::LetterEnqueuedPresenter do
               city: 'Thatville',
               state: 'UT',
               zipcode: '88888',
-            }
+            },
           )
         end
 
