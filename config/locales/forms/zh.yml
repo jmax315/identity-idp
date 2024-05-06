@@ -24,8 +24,8 @@ zh:
       cancel: 是的，取消
       confirm: 确认
       continue: 继续
-      continue_ipp: Continue in person
-      continue_remote: Continue online
+      continue_ipp: 继续亲身验证
+      continue_remote: 继续在网上验证
       delete: 删除
       disable: 删除
       edit: 编辑
