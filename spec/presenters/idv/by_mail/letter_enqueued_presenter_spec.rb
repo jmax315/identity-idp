@@ -23,7 +23,12 @@ RSpec.describe Idv::ByMail::LetterEnqueuedPresenter do
   let(:current_user) { nil }
   let(:user_session) { {} }
   let(:service_provider) { nil }
-  let(:pii) { nil }
+  let(:pii) do
+    Idp::Constants::MOCK_IDV_APPLICANT.keys.inject({}) do |pii, key|
+      pii[key] = nil
+      pii
+    end
+  end
 
   describe '#address_lines' do
     let(:current_user) { create(:user, :with_pending_gpo_profile) }
@@ -31,12 +36,14 @@ RSpec.describe Idv::ByMail::LetterEnqueuedPresenter do
     shared_examples 'retrieves and formats the address correctly' do
       context 'when the address has no address2' do
         let(:pii) do
-          {
-            address1: '123 Some St',
-            city: 'Anytown',
-            state: 'OK',
-            zipcode: '99999',
-          }
+          super().merge(
+            {
+              address1: '123 Some St',
+              city: 'Anytown',
+              state: 'OK',
+              zipcode: '99999',
+            }
+          )
         end
 
         it 'shows a 2 line address' do
@@ -51,13 +58,15 @@ RSpec.describe Idv::ByMail::LetterEnqueuedPresenter do
 
       context 'when the address has an address2' do
         let(:pii) do
-          {
-            address1: '456 Cross St',
-            address2: 'Apt 3G',
-            city: 'Thatville',
-            state: 'UT',
-            zipcode: '88888',
-          }
+          super().merge(
+            {
+              address1: '456 Cross St',
+              address2: 'Apt 3G',
+              city: 'Thatville',
+              state: 'UT',
+              zipcode: '88888',
+            }
+          )
         end
 
         it 'shows a 3 line address' do

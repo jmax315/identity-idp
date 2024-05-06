@@ -17,9 +17,9 @@ module Idv
 
       def address_lines
         [
-          pii[:address1],
-          pii[:address2],
-          "#{pii[:city]}, #{pii[:state]} #{pii[:zipcode]}",
+          pii.address1,
+          pii.address2,
+          "#{pii.city}, #{pii.state} #{pii.zipcode}",
         ].compact
       end
 
@@ -58,7 +58,8 @@ module Idv
       end
 
       def pii_from_user_session
-        idv_session.pii_from_user_in_flow_session
+        pii = idv_session.pii_from_user_in_flow_session
+        pii && Pii::StateId.new(**pii)
       end
 
       def pii_from_gpo_pending_profile
