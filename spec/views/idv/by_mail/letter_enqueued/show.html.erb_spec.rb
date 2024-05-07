@@ -5,7 +5,9 @@ RSpec.describe 'idv/by_mail/letter_enqueued/show.html.erb' do
   let(:step_indicator_steps) { Idv::StepIndicatorConcern::STEP_INDICATOR_STEPS_GPO }
 
   let(:pii_from_doc) do
-    {}
+    Idp::Constants::MOCK_IDV_APPLICANT.keys.each_with_object({}) do |key, pii_from_doc|
+      pii_from_doc[key] = ''
+    end
   end
 
   let(:idv_session) do
@@ -19,15 +21,14 @@ RSpec.describe 'idv/by_mail/letter_enqueued/show.html.erb' do
   end
 
   before do
-    assign(
-      :presenter,
-      Idv::ByMail::LetterEnqueuedPresenter.new(
-        idv_session: idv_session,
-        user_session: {},
-        url_options: {},
-        current_user: nil,
-      ),
+    presenter = Idv::ByMail::LetterEnqueuedPresenter.new(
+      idv_session: idv_session,
+      user_session: {},
+      url_options: {},
+      current_user: nil,
     )
+
+    assign(:presenter, presenter)
 
     allow(view).to receive(:step_indicator_steps).and_return(step_indicator_steps)
     render
@@ -70,12 +71,14 @@ RSpec.describe 'idv/by_mail/letter_enqueued/show.html.erb' do
 
   context 'when address line 2 is not present' do
     let(:pii_from_doc) do
-      {
-        address1: '123 Identical Ct.',
-        city: 'Suburbia',
-        state: 'US',
-        zipcode: '99999',
-      }
+      super().merge(
+        {
+          address1: '123 Identical Ct.',
+          city: 'Suburbia',
+          state: 'US',
+          zipcode: '99999',
+        },
+      )
     end
 
     it 'renders the correct two-line address' do
@@ -86,13 +89,15 @@ RSpec.describe 'idv/by_mail/letter_enqueued/show.html.erb' do
 
   context 'when address line 2 is present' do
     let(:pii_from_doc) do
-      {
-        address1: '456 Big Building Blvd',
-        address2: 'Unit 42',
-        city: 'Downtown',
-        state: 'US',
-        zipcode: '99999',
-      }
+      super().merge(
+        {
+          address1: '456 Big Building Blvd',
+          address2: 'Unit 42',
+          city: 'Downtown',
+          state: 'US',
+          zipcode: '99999',
+        }
+      )
     end
 
     it 'renders the correct three-line address' do
