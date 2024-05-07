@@ -48,14 +48,6 @@ module Idv
       end
 
       def pii
-        # puts "@idv_session: #{@idv_session.inspect}"
-        # puts "@current_user: #{@current_user.inspect}"
-        # puts "@user_session: #{@user_session.inspect}"
-        # puts "@url_options: #{@url_options.inspect}"
-        # puts "LetterEnqueuedPresenter#pii: pii_from_idv_session: #{pii_from_idv_session.inspect}"
-        # puts "LetterEnqueuedPresenter#pii: pii_from_user_session: #{pii_from_user_session.inspect}"
-        # puts "LetterEnqueuedPresenter#pii: pii_from_gpo_pending_profile: #{pii_from_gpo_pending_profile.inspect}"
-
         @pii ||= pii_from_idv_session ||
                  pii_from_user_session ||
                  pii_from_gpo_pending_profile

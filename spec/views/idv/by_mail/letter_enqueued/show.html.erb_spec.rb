@@ -5,9 +5,7 @@ RSpec.describe 'idv/by_mail/letter_enqueued/show.html.erb' do
   let(:step_indicator_steps) { Idv::StepIndicatorConcern::STEP_INDICATOR_STEPS_GPO }
 
   let(:pii_from_doc) do
-    Idp::Constants::MOCK_IDV_APPLICANT.keys.each_with_object({}) do |key, pii_from_doc|
-      pii_from_doc[key] = ''
-    end
+    Idp::Constants::MOCK_IDV_APPLICANT.keys.index_with(nil)
   end
 
   let(:idv_session) do
@@ -96,7 +94,7 @@ RSpec.describe 'idv/by_mail/letter_enqueued/show.html.erb' do
           city: 'Downtown',
           state: 'US',
           zipcode: '99999',
-        }
+        },
       )
     end
 
