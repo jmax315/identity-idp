@@ -285,8 +285,8 @@ RSpec.feature 'document capture step', :js, allowed_extra_analytics: [:*] do
         end
 
         context 'selfie with error is uploaded' do
-          let(:in_person_proofing_enabled) { true }
-          let(:in_person_proofing_opt_in_enabled) { true }
+          let(:in_person_proofing_enabled) { false }
+          let(:in_person_proofing_opt_in_enabled) { false }
 
           before do
             allow(IdentityConfig.store).to receive(:doc_auth_max_attempts).and_return(99)
