@@ -257,6 +257,29 @@ RSpec.describe ImageUploadResponsePresenter do
           end
         end
 
+        context 'hybrid flow' do
+          let(:extra_attributes) do
+            { remaining_submit_attempts: 1, flow_path: 'hybrid' }
+          end
+
+          it 'returns hash of properties' do
+            expected = {
+              success: false,
+              result_code_invalid: true,
+              result_failed: false,
+              errors: [{ field: :front, message: t('doc_auth.errors.not_a_file') }],
+              hints: true,
+              # redirect: idv_hybrid_mobile_capture_complete_url,
+              remaining_submit_attempts: 1,
+              ocr_pii: nil,
+              doc_type_supported: true,
+              failed_image_fingerprints: { front: [], back: [], selfie: [] },
+            }
+
+            expect(presenter.as_json).to eq expected
+          end
+        end
+
         it 'returns hash of properties' do
           expected = {
             success: false,

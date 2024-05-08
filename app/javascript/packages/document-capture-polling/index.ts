@@ -99,6 +99,8 @@ export class DocumentCapturePolling {
     if (this.pollAttempts >= MAX_DOC_CAPTURE_POLL_ATTEMPTS) {
       this.onMaxPollAttempts();
     } else {
+      setTimeout(() => console.log("TIME OUT"), 50);
+
       this.pollAttempts++;
       setTimeout(() => this.poll(), DOC_CAPTURE_POLL_INTERVAL);
     }

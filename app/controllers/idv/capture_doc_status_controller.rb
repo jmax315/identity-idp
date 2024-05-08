@@ -9,6 +9,7 @@ module Idv
     respond_to :json
 
     def show
+      binding.pry
       render(json: { redirect: redirect_url }.compact, status: status)
     end
 
@@ -23,6 +24,7 @@ module Idv
     private
 
     def status
+      binding.pry
       @status ||= begin
         if !document_capture_session
           :unauthorized
@@ -44,6 +46,7 @@ module Idv
     end
 
     def redirect_url
+      binding.pry
       return unless document_capture_session
 
       if rate_limiter.limited?

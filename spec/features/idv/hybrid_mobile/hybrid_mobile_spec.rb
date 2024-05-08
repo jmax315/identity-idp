@@ -151,11 +151,47 @@ RSpec.describe 'Hybrid Flow', :allow_net_connect_on_start, allowed_extra_analyti
       )
     end
 
-    it 'shows capture complete on mobile and error page on desktop', js: true do
-      user = nil
+    it 'does not rate limit on last attempt if successful', js: true do
+      perform_in_browser(:desktop) do
+        sign_in_and_2fa_user
+        complete_doc_auth_steps_before_hybrid_handoff_step
+        clear_and_fill_in(:doc_auth_phone, phone_number)
+        click_send_link
+
+        expect(page).to have_content(t('doc_auth.headings.text_message'))
+      end
+
+      expect(@sms_link).to be_present
+
+      perform_in_browser(:mobile) do
+        visit @sms_link
+
+        (max_attempts - 1).times do
+          # binding.pry
+          attach_and_submit_images
+          click_on t('idv.failure.button.warning')
+        end
+
+        # reset to return mocked normal success response for the last attempt
+        DocAuth::Mock::DocAuthMockClient.reset!
+        attach_and_submit_images
+
+        expect(page).to have_current_path(idv_hybrid_mobile_capture_complete_url)
+        expect(page).to have_content(t('doc_auth.headings.capture_complete').tr(' ', ' '))
+        expect(page).to have_text(t('doc_auth.instructions.switch_back'))
+      end
 
       perform_in_browser(:desktop) do
-        user = sign_in_and_2fa_user
+        expect(page).to_not have_current_path(idv_session_errors_rate_limited_path, wait: 10)
+        expect(page).to_not have_content(t('doc_auth.headings.text_message'), wait: 10)
+        expect(page).to have_current_path(idv_ssn_path, wait: 10)
+      end
+    end
+
+    it 'shows capture complete on mobile and error page on desktop', js: true do
+      perform_in_browser(:desktop) do
+        # binding.pry
+        sign_in_and_2fa_user
         complete_doc_auth_steps_before_hybrid_handoff_step
         clear_and_fill_in(:doc_auth_phone, phone_number)
         click_send_link
@@ -175,6 +211,8 @@ RSpec.describe 'Hybrid Flow', :allow_net_connect_on_start, allowed_extra_analyti
 
         # final failure
         attach_and_submit_images
+        # binding.pry
+        # sleep 20
 
         expect(page).to have_current_path(idv_hybrid_mobile_capture_complete_url)
         expect(page).not_to have_content(t('doc_auth.headings.capture_complete').tr(' ', ' '))
@@ -182,6 +220,7 @@ RSpec.describe 'Hybrid Flow', :allow_net_connect_on_start, allowed_extra_analyti
       end
 
       perform_in_browser(:desktop) do
+        # binding.pry
         expect(page).to have_current_path(idv_session_errors_rate_limited_path, wait: 10)
       end
     end
