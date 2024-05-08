@@ -173,7 +173,7 @@ zh:
         face_too_small: Face too small
         too_many_faces: Too many faces
       ssn: 我们需要你的社会保障号码来证实你的姓名、生日和地址。
-      steppFing_up_html: Verify your identity again to access this service. %{link_html}
+      stepping_up_html: Verify your identity again to access this service. %{link_html}
       tag: 建议
       upload_from_computer: 没有手机？从该电脑上传你身份证件的照片。
       upload_from_phone: 你不必重新登录，而且拍完照后可以转回到该电脑。你的手机必须带有相机和网络浏览器。
