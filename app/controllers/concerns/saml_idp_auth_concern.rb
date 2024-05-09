@@ -57,7 +57,7 @@ module SamlIdpAuthConcern
   def validate_service_provider_and_authn_context
     return if result.success?
 
-    capture_analytics
+    capture_analytics(matching_cert: @saml_request_validator.matching_cert?)
     render 'saml_idp/auth/error', status: :bad_request
   end
 
@@ -202,7 +202,7 @@ module SamlIdpAuthConcern
        saml_request_service_provider&.skip_encryption_allowed
       nil
     elsif saml_request_service_provider&.encrypt_responses?
-      cert = saml_request.service_provider.matching_cert ||
+      cert = saml_request.matching_cert ||
              saml_request_service_provider&.ssl_certs&.first
       {
         cert: cert,

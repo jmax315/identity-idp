@@ -121,14 +121,14 @@ class SamlIdpController < ApplicationController
     request.env['devise_session_limited_failure_redirect_url'] = request.url
   end
 
-  def capture_analytics
+  def capture_analytics(matching_cert: true)
     analytics_payload = result.to_h.merge(
       endpoint: api_saml_auth_path(path_year: params[:path_year]),
       idv: identity_needs_verification?,
       finish_profile: user_has_pending_profile?,
       requested_ial: requested_ial,
       request_signed: saml_request.signed?,
-      matching_cert_serial: saml_request.service_provider.matching_cert&.serial&.to_s,
+      matching_cert_serial: matching_cert ? saml_request.matching_cert&.serial&.to_s : nil,
     )
     analytics.saml_auth(**analytics_payload)
   end

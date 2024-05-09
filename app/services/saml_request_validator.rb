@@ -32,6 +32,10 @@ class SamlRequestValidator
     end
   end
 
+  def matching_cert?
+    !@blank_cert
+  end
+
   private
 
   attr_accessor :service_provider, :authn_context, :authn_context_comparison, :nameid_format
