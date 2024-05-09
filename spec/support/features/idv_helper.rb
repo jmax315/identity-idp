@@ -158,6 +158,7 @@ module IdvHelper
     if biometric_comparison_required
       params[:vtr] = ['C1.P1.Pb'].to_json
     else
+      params[:vtr] = ['C1.P1'].to_json
       params[:acr_values] = Saml::Idp::Constants::IAL2_AUTHN_CONTEXT_CLASSREF
     end
 
