@@ -113,6 +113,12 @@ module InPersonHelper
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
       # A StaleElementReferenceError means that the context the element
       # was in has disappeared, which means the element is gone too.
+    rescue Selenium::WebDriver::Error::UnknownError => e
+      # Another error which can happen if our context has gone
+      # stale. Unfortunately, the error class isn't specific here, so
+      # check the message and re-raise if this isn't the error we're
+      # looking for.
+      raise unless e.message == 'Node with given id does not belong to the document'
     end
   end
 
